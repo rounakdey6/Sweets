@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Mishti Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .products {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 10px #FFD580;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .product-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 1.2em;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            color: #e67e22;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .add-to-cart {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background: #d35400;
+            transform: scale(1.05);
+        }
+
+        .cart-count {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #e67e22;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .cart-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff3e0;
+            border-radius: 10px;
+        }
+
+        .cart-items {
+            margin-top: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .order-now-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .order-now-btn:hover {
+            background: #d35400;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="logo">
+            <img src="img/DALL·E 2024-10-19 23.08.32 - A colorful illustration of an Indian sweet vendor standing in a vibrant sweets stall filled with various traditional Indian sweets displayed on shelve.webp"
+                alt="" height="40px" width="40px">
+            <a href="">Mishti Hub</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="product.html">Products</a>
+            <a href="delivery.html">Delivery</a>
+            <a href="dinein.html">Dine in </a>
+        </div>
+    </div>
+
+    <div class="products">
+        <h1>Our Sweet Collection</h1>
+        <div class="cart-count">Cart: <span id="cart-total">0</span></div>
+        <div class="product-grid">
+            <!-- Product Cards -->
+            <div class="product-card">
+                <div class="product-info">
+                    <h3 class="product-title">Rosogolla</h3>
+                    <p class="product-description">Soft, spongy cheese balls soaked in sugar syrup</p>
+                    <p class="product-price">₹20/piece</p>
+                    <button class="add-to-cart" data-name="Rosogolla" data-price="20">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-info">
+                    <h3 class="product-title">Sandesh</h3>
+                    <p class="product-description">Delicate milk-based sweet with a smooth texture</p>
+                    <p class="product-price">₹25/piece</p>
+                    <button class="add-to-cart" data-name="Sandesh" data-price="25">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-info">
+                    <h3 class="product-title">Gulab Jamun</h3>
+                    <p class="product-description">Deep-fried milk solids dipped in rose-flavored syrup</p>
+                    <p class="product-price">₹15/piece</p>
+                    <button class="add-to-cart" data-name="Gulab Jamun" data-price="15">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-info">
+                    <h3 class="product-title">Kaju Barfi</h3>
+                    <p class="product-description">Rich cashew fudge with a smooth, creamy texture</p>
+                    <p class="product-price">₹35/piece</p>
+                    <button class="add-to-cart" data-name="Kaju Barfi" data-price="35">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Section -->
+        <div class="cart-section">
+            <h2>Your Cart</h2>
+            <div class="cart-items" id="cart-items"></div>
+            <button class="order-now-btn" id="order-now-btn">Order Now</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = [];
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const orderNowBtn = document.getElementById('order-now-btn');
+
+            // Add to cart functionality
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', () => {
+                    const name = button.getAttribute('data-name');
+                    const price = parseFloat(button.getAttribute('data-price'));
+
+                    // Add item to cart
+                    cart.push({ name, price });
+                    updateCart();
+                });
+            });
+
+            // Update cart display
+            function updateCart() {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <span>${item.name}</span>
+                        <span>₹${item.price}</span>
+                    </div>
+                `).join('');
+
+                // Update cart total
+                const total = cart.reduce((sum, item) => sum + item.price, 0);
+                cartTotal.textContent = cart.length;
+            }
+
+            // Order Now button
+            orderNowBtn.addEventListener('click', () => {
+                localStorage.setItem('cart', JSON.stringify(cart));
+                window.location.href = 'delivery.html';
+            });
+        });
+    </script>
+</body>
+</html>
